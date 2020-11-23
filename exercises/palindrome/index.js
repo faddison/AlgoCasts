@@ -7,6 +7,34 @@
 //   palindrome("abba") === true
 //   palindrome("abcdefg") === false
 
-function palindrome(str) {}
+function palindrome(str) {
+    return s3(str);
+}
+
+// reversal option one liner
+function s3(str) {
+    return str.split('').reverse().join('') === str;
+}
+
+// reverse letter comparison with O(n/2))
+function s2(str) {
+    var iterations = str.length / 2
+    if (str.length % 2 == 1)
+        iterations = (str.length+1)/2
+    for (i = 0; i < iterations; i++) {
+        if (str[i] != str[str.length - i - 1])
+            return false;
+    }
+    return true;
+}
+
+// reverse word comparison (linear time)
+function s1(str) {
+    var newStr = ""
+    for (i = 0; i < str.length; i++) {
+        newStr += str[str.length - i - 1];
+    }
+    return str == newStr;
+}
 
 module.exports = palindrome;
