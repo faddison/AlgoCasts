@@ -77,20 +77,56 @@ class LinkedList(object):
                 else:
                     n = n.next
             return None
+    # case 1: index == 0, self.head == None [done]
+    # case 2: index != 0, self.head == None [done]
+    # case 3: index == 0, self.head != None && self.next == None [done]
+    # case 4: index == 0, self.head != None && self.next != None [done]
+    # case 5: index != 0, self.head != None && self.next == None [done]
+    # case 6*: index != 0, self.head != None && self.next != None (iteration)
+    # case 6: index unreachable [done]
+    # case 7: index reached, next unreachable [done]
+    # case 8: index reached, next reachable [done]
 
+    # todo: to improve performance check size against index before hand
     def removeAt(self, index):
-        if index == 0:
-            if self.head is not None:
-                self.head = self.head.next
-                self.size = self.size - 1
-        else:
-            while n.next is not None:
-                count = count + 1
-                if count == index:
-                    return n.next
-                else:
-                    n = n.next
-            return None
+        if self.head != None:   
+            if self.head.next != None:
+                if index == 0: # case 4
+                    self.head = self.head.next
+                    self.size = self.size - 1
+                    return 4
+                else: # case 6*
+                    count = 1
+                    n0 = self.head
+                    n1 = self.head.next
+                    while n1.next != None and count < index:
+                        n0 = n1
+                        n1 = n1.next
+                        count = count + 1
+                    if count < index: # case 6 (index unreachable)
+                        return 6
+                    elif count == index and n1.next == None: # case 7: index reached, next unreachable (truncation)
+                        n0.next = None
+                        self.size = self.size - 1
+                        return 7
+                    elif count == index and n1.next != None: # case 8: index reached, next reachable (reorganization)
+                        n0.next = n1.next
+                        self.size = self.size - 1
+                        return 8
+                    else:
+                        raise Exception("Case 6. Paths a, b, and c not encountered. Possible additional case found.")
+            else:                 
+                if index == 0: # case 3
+                    self.head = None
+                    self.size = self.size - 1
+                    return 3              
+                else: # case 5 (index out of range)
+                    return 5
+        else: # case 1, 2
+            if index == 0:
+                return 1
+            else:
+                return 2
 
     def insertAt(self, data, node):
         pass
@@ -324,3 +360,115 @@ def test_getAt_2_fail():
     n = l.getAt(2)
     assert n == None
 
+    
+    
+    # case 6*: index != 0, self.head != None && self.next != None (iteration)
+    # case 7: index reached, next unreachable [done]
+    # case 8: index reached, next reachable [done]
+
+# case 1: index == 0, self.head == None [done]
+def test_removeAt_c1_indexIsZero_headIsNone():
+    l = LinkedList()
+    case = l.removeAt(0)
+    assert case == 1
+    assert l.size == 0
+    assert l.head == None
+
+# case 2: index != 0, self.head == None [done]
+def test_removeAt_c2_indexNotZero_headIsNone():
+    l = LinkedList()
+    case = l.removeAt(1)
+    assert case == 2
+    assert l.size == 0
+    assert l.head == None
+
+# case 3: index == 0, self.head != None && self.next == None [done]
+def test_removeAt_c3_indexIsZero_headNotNone_headNextIsNone():
+    l = LinkedList()
+    l.insertFirst(1)
+    case = l.removeAt(0)
+    assert case == 3
+    assert l.size == 0
+    assert l.head == None
+
+# case 4: index == 0, self.head != None && self.next != None [done]
+def test_removeAt_c4_indexIsZero_headNotNone_headNextNotNone():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    case = l.removeAt(0)
+    assert case == 4
+    assert l.size == 1
+    assert l.head.data == 2
+    assert l.head.next == None
+
+# case 5: index != 0, self.head != None && self.next == None [done]
+def test_removeAt_c5_indexNotZero_headNotNone_headNextIsNone():
+    l = LinkedList()
+    l.insertFirst(1)
+    case = l.removeAt(1)
+    assert case == 5
+    assert l.size == 1
+    assert l.head.data == 1
+
+# case 6*: index != 0, self.head != None && self.next != None (iteration)
+# case 6: index unreachable [done]
+def test_removeAt_c6_indexNotZero_headNotNone_headNextNotNone_indexUnreachable():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    case = l.removeAt(3)
+    assert case == 6
+    assert l.size == 2
+    assert l.head.data == 1
+    assert l.head.next.data == 2
+
+# case 7: index reached, next unreachable [done]
+def test_removeAt_c7_indexNotZero_headNotNone_headNextNotNone_indexReachable_nextUnreachable_Size2():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    case = l.removeAt(1)
+    assert case == 7
+    assert l.size == 1
+    assert l.head.data == 1
+    assert l.head.next == None
+
+# case 7b: index reached, next unreachable (truncation)
+def test_removeAt_c7b_indexNotZero_headNotNone_headNextNotNone_indexReachable_nextUnreachable_Size3():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    case = l.removeAt(2)
+    assert case == 7
+    assert l.size == 2
+    assert l.head.data == 1
+    assert l.head.next.data == 2
+    assert l.head.next.next == None
+    
+# case 8: index reached, next reachable [done]
+def test_removeAt_c8_indexNotZero_headNotNone_headNextNotNone_indexReachable_nextReachable_Size3():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    case = l.removeAt(1)
+    assert case == 8
+    assert l.size == 2
+    assert l.head.data == 1
+    assert l.head.next.data == 3
+    assert l.head.next.next == None
+
+def test_removeAt_c8_indexNotZero_headNotNone_headNextNotNone_indexReachable_nextReachable_Size4():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    l.insertLast(4)
+    case = l.removeAt(1)
+    assert case == 8
+    assert l.size == 3
+    assert l.head.data == 1
+    assert l.head.next.data == 3
+    assert l.head.next.next.next == None
