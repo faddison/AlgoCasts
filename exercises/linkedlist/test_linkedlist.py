@@ -128,8 +128,32 @@ class LinkedList(object):
             else:
                 return 2
 
-    def insertAt(self, data, node):
-        pass
+    def insertAt(self, data, index):
+        if index < 0:
+            return 0
+        if self.head == None:
+            self.head = Node(data, None)
+            self.size = self.size + 1
+            return 1
+        else: # head exists
+            if index == 0:
+                self.head = Node(data, self.head)
+                self.size = self.size + 1
+                return 2
+            else: # head exists, head.next exists, index >=2
+                n = self.head
+                count = 0
+                while n.next != None and count < index:
+                    n = n.next
+                    count = count + 1
+                if n.next == None: # append
+                    n.next = Node(data, None)
+                    self.size = self.size + 1
+                    return 3
+                else:
+                    n.next = Node(data, n.next)
+                    self.size = self.size + 1
+                    return 4
 
     def forEach(self, func):
         pass
@@ -472,3 +496,73 @@ def test_removeAt_c8_indexNotZero_headNotNone_headNextNotNone_indexReachable_nex
     assert l.head.data == 1
     assert l.head.next.data == 3
     assert l.head.next.next.next == None
+
+# 0: index < 0
+# 1: head == None, index == 0
+# 1: head == None, index > 0
+# 2: head != None, index == 0
+# 3: append (end of list or index unreachable)
+# 4: insertion
+
+def test_insertAt_c0_IndexLessThanZero():
+    l = LinkedList()
+    case = l.insertAt(1, -1)
+    assert case == 0
+
+def test_insertAt_c1_headIsNone_IndexIsZero():
+    l = LinkedList()
+    case = l.insertAt(1, 0)
+    assert case == 1
+    assert l.head.data == 1
+    assert l.size == 1
+
+def test_insertAt_c1_headIsNone_IndexNotZero():
+    l = LinkedList()
+    case = l.insertAt(1, 2)
+    assert case == 1
+    assert l.head.data == 1
+    assert l.size == 1
+
+def test_insertAt_c2_headNotNone_IndexIsZero():
+    l = LinkedList()
+    l.insertFirst(1)
+    case = l.insertAt(2, 0)
+    assert case == 2
+    assert l.head.data == 2
+    assert l.head.next.data == 1
+    assert l.size == 2
+
+def test_insertAt_c3_append_IndexOutOfRange():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    case = l.insertAt(3, 10)
+    assert case == 3
+    assert l.head.data == 1
+    assert l.head.next.data == 2
+    assert l.head.next.next.data == 3
+    assert l.size == 3
+    
+def test_insertAt_c3_append_EndOfList():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    case = l.insertAt(3, 2)
+    assert case == 3
+    assert l.head.data == 1
+    assert l.head.next.data == 2
+    assert l.head.next.next.data == 3
+    assert l.size == 3
+
+def test_insertAt_c4_insert():
+    l = LinkedList()
+    l.insertFirst(1) # 0
+    l.insertLast(2) # 1
+    l.insertLast(3) # 2
+    case = l.insertAt(4, 1)
+    assert case == 4
+    assert l.head.data == 1
+    assert l.head.next.data == 2
+    assert l.head.next.next.data == 4
+    assert l.head.next.next.next.data == 3
+    assert l.size == 4
