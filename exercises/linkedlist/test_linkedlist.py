@@ -486,3 +486,54 @@ def test_removeAt_c8_indexNotZero_headNotNone_headNextNotNone_indexReachable_nex
 #   l.insertLast('b')
 #   l.insertLast('c')
 #   midpoint(l); # returns { data: 'b' }
+
+# cases
+# 1: even
+# 2: odd
+
+def midpoint(l):
+    if l.head == None:
+        return None
+    s = l.head
+    f = l.head
+    while f.next != None and f.next.next != None:
+        s = s.next
+        f = f.next.next
+    return s
+
+def test_midpoint_headIsNone():
+    l = LinkedList()
+    m = midpoint(l)
+    assert m == None
+
+def test_midpoint_headNextIsNone():
+    l = LinkedList()
+    l.insertFirst(1)
+    m = midpoint(l)
+    assert m.data == 1
+
+def test_midpoint_headNextNext():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    m = midpoint(l)
+    assert m.data == 1
+
+def test_midpoint_even4():
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    l.insertLast(4)
+    m = midpoint(l)
+    assert m.data == 2
+
+def test_midpoint_odd5():
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    l.insertLast(4)
+    l.insertLast(5)
+    m = midpoint(l)
+    assert m.data == 3
