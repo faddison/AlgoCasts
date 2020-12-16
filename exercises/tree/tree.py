@@ -37,9 +37,21 @@ class Tree(object):
         while len(nodes) > 0:
             # print("len={0}".format(len(nodes)))
             n = nodes[0]
-            nodes.pop(0)
             func(n)
+            nodes = nodes[1:len(nodes)]
             nodes.extend(n.children)
 
     def traverseDF(self, func):
-        pass
+        nodes = []
+        nodes.append(self.root)
+        while len(nodes) > 0:
+            # print("len={0}".format(len(nodes)))
+            n = nodes[0]
+            func(n)
+            nodes = nodes[1:len(nodes)]
+            # print("pre-nodes-len:{0}".format(len(nodes)))
+            children = n.children
+            children.reverse()
+            for c in children:
+                nodes.insert(0, c)
+            

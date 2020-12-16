@@ -125,3 +125,69 @@ def test_tree_traverseBF_1both_grandchild1sibling():
     t.root = n
     f = lambda n : print("data={0}".format(n.data))
     t.traverseBF(f)
+
+def test_tree_traverseDF_root():
+    n = Node(0)
+    t = Tree()
+    t.root = n
+    f = lambda n : print("data={0}".format(n.data))
+    t.traverseDF(f)
+
+def test_tree_traverseDF_1child():
+    n = Node(0)
+    n.add(20)
+    t = Tree()
+    t.root = n
+    f = lambda n : print("data={0}".format(n.data))
+    t.traverseDF(f)
+
+def test_tree_traverseDF_1sibling():
+    n = Node(0)
+    n.add(20)
+    n.add(21)
+    t = Tree()
+    t.root = n
+    f = lambda n : print("data={0}".format(n.data))
+    t.traverseDF(f)
+
+def test_tree_traverseDF_1direct_grandchild():
+    n = Node(0)
+    n.add(20)
+    n.add(21)
+    n.children[0].add(30)
+    t = Tree()
+    t.root = n
+    f = lambda n : print("data={0}".format(n.data))
+    t.traverseDF(f)
+
+def test_tree_traverseDF_1direct_grandchild1sibling():
+    n = Node(0)
+    n.add(20)
+    n.add(21)
+    n.children[0].add(30)
+    n.children[0].add(31)
+    t = Tree()
+    t.root = n
+    f = lambda n : print("data={0}".format(n.data))
+    t.traverseDF(f)
+
+def test_tree_traverseDF_1indirect_grandchild():
+    n = Node(0)
+    n.add(20)
+    n.add(21)
+    n.children[1].add(30)
+    t = Tree()
+    t.root = n
+    f = lambda n : print("data={0}".format(n.data))
+    t.traverseDF(f)
+
+def test_tree_traverseDF_1both_grandchild1sibling():
+    n = Node(0)
+    n.add(20)
+    n.add(21)
+    n.children[0].add(30)
+    n.children[1].add(31)
+    t = Tree()
+    t.root = n
+    f = lambda n : print("data={0}".format(n.data))
+    t.traverseDF(f)
