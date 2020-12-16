@@ -497,70 +497,6 @@ def test_removeAt_c8_indexNotZero_headNotNone_headNextNotNone_indexReachable_nex
     assert l.head.next.data == 3
     assert l.head.next.next.next == None
 
-# --- Directions
-# Return the 'middle' node of a linked list.
-# If the list has an even number of elements, return
-# the node at the end of the first half of the list.
-# *Do not* use a counter variable, *do not* retrieve
-# the size of the list, and only iterate
-# through the list one time.
-# --- Example
-#   const l = new LinkedList();
-#   l.insertLast('a')
-#   l.insertLast('b')
-#   l.insertLast('c')
-#   midpoint(l); # returns { data: 'b' }
-
-# cases
-# 1: even
-# 2: odd
-
-def midpoint(l):
-    if l.head == None:
-        return None
-    s = l.head
-    f = l.head
-    while f.next != None and f.next.next != None:
-        s = s.next
-        f = f.next.next
-    return s
-
-def test_midpoint_headIsNone():
-    l = LinkedList()
-    m = midpoint(l)
-    assert m == None
-
-def test_midpoint_headNextIsNone():
-    l = LinkedList()
-    l.insertFirst(1)
-    m = midpoint(l)
-    assert m.data == 1
-
-def test_midpoint_headNextNext():
-    l = LinkedList()
-    l.insertFirst(1)
-    l.insertLast(2)
-    m = midpoint(l)
-    assert m.data == 1
-
-def test_midpoint_even4():
-    l = LinkedList()
-    l.insertLast(1)
-    l.insertLast(2)
-    l.insertLast(3)
-    l.insertLast(4)
-    m = midpoint(l)
-    assert m.data == 2
-
-def test_midpoint_odd5():
-    l = LinkedList()
-    l.insertLast(1)
-    l.insertLast(2)
-    l.insertLast(3)
-    l.insertLast(4)
-    l.insertLast(5)
-    m = midpoint(l)
-    assert m.data == 3
 # 0: index < 0
 # 1: head == None, index == 0
 # 1: head == None, index > 0
@@ -630,3 +566,214 @@ def test_insertAt_c4_insert():
     assert l.head.next.next.data == 4
     assert l.head.next.next.next.data == 3
     assert l.size == 4
+
+
+# --- Directions
+# Return the 'middle' node of a linked list.
+# If the list has an even number of elements, return
+# the node at the end of the first half of the list.
+# *Do not* use a counter variable, *do not* retrieve
+# the size of the list, and only iterate
+# through the list one time.
+# --- Example
+#   const l = new LinkedList();
+#   l.insertLast('a')
+#   l.insertLast('b')
+#   l.insertLast('c')
+#   midpoint(l); # returns { data: 'b' }
+
+# cases
+# 1: even
+# 2: odd
+
+def midpoint(l):
+    if l.head == None:
+        return None
+    s = l.head
+    f = l.head
+    while f.next != None and f.next.next != None:
+        s = s.next
+        f = f.next.next
+    return s
+
+def test_midpoint_headIsNone():
+    l = LinkedList()
+    m = midpoint(l)
+    assert m == None
+
+def test_midpoint_headNextIsNone():
+    l = LinkedList()
+    l.insertFirst(1)
+    m = midpoint(l)
+    assert m.data == 1
+
+def test_midpoint_headNextNext():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    m = midpoint(l)
+    assert m.data == 1
+
+def test_midpoint_even4():
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    l.insertLast(4)
+    m = midpoint(l)
+    assert m.data == 2
+
+def test_midpoint_odd5():
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    l.insertLast(4)
+    l.insertLast(5)
+    m = midpoint(l)
+    assert m.data == 3
+
+def circular(l):
+    if l.head is None:
+        return False
+    if l.head.next is None:
+        return False        
+    if l.head.next.next is None:
+        if id(l.head.next.next) == id(l.head):
+            return True
+        else:
+            return False
+    s = l.head.next
+    f = l.head.next.next
+    while id(s) != id(f) and f.next is not None and f.next.next is not None:
+        s = s.next
+        f = f.next.next
+    if id(s) == id(f):
+        return True
+    else:
+        return False
+
+def test_circular_headIsNone():
+    l = LinkedList()
+    c =  circular(l)
+    assert c == False
+
+def test_circular_headNextIsNone():
+    l = LinkedList()
+    l.insertFirst(1)
+    c =  circular(l)
+    assert c == False
+
+def test_circular_headNextNextIsNone_circular():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    l.getLast().next = l.head
+    c =  circular(l)
+    assert c == True
+
+def test_circular_headNextNextIsNone_nonCircular():
+    l = LinkedList()
+    l.insertFirst(1)
+    l.insertLast(2)
+    c =  circular(l)
+    assert c == False
+
+def test_circular_even4_circular():
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    l.insertLast(4)    
+    l.getLast().next = l.head
+    c =  circular(l)
+    assert c == True
+
+def test_circular_even4_nonCircular():
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    l.insertLast(4)
+    c = circular(l)
+    assert c == False
+
+def test_circular_odd5_circular():
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    l.insertLast(4)
+    l.insertLast(5)    
+    l.getLast().next = l.head
+    c =  circular(l)
+    assert c == True
+
+def fromLast(l, n):
+    s = l.head
+    f = l.head
+    count = 0
+    while count < n:
+        f = f.next
+        count = count + 1
+    # positions set
+    while f.next is not None:
+        s = s.next
+        f = f.next
+    return s
+
+# n=0, size=1, [s]
+def test_fromLast_n0():
+    l = LinkedList()
+    l.insertLast(1)
+    n = fromLast(l, 0)
+    assert n.data == 1
+
+# n=0, size=2, []-[sf]
+def test_fromLast_tail():    
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    n = fromLast(l, 0)
+    assert n.data == 2
+
+# n=1, size=2, [s]-[f]
+def test_fromLast_n1():   
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    n = fromLast(l, 1)
+    assert n.data == 1
+
+# n=3, size=5, []-[s]-[]-[]-[f]
+def test_fromLast_Long_Mid():
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    l.insertLast(4)
+    l.insertLast(5)
+    n = fromLast(l, 3)
+    assert n.data == 2
+
+# n=3, size=5, []-[s]-[]-[]-[f]
+def test_fromLast_Long_Head():
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    l.insertLast(4)
+    l.insertLast(5)
+    n = fromLast(l, 4)
+    assert n.data == 1
+
+# n=3, size=5, []-[s]-[]-[]-[f]
+def test_fromLast_Long_Tail():
+    l = LinkedList()
+    l.insertLast(1)
+    l.insertLast(2)
+    l.insertLast(3)
+    l.insertLast(4)
+    l.insertLast(5)
+    n = fromLast(l, 0)
+    assert n.data == 5
