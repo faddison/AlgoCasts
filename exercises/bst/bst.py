@@ -12,20 +12,36 @@ class BST(object):
 
     def insert(self, data):
         curr = self.root
-        inserted = False
-        while (not inserted):
+        while (True):
             if data < curr.data:
-                if curr.left:
+                if curr.left: 
                     curr = curr.left
                 else:
                     curr.left = Node(data)
-                    inserted = True
+                    return
             else:
                 if curr.right:
                     curr = curr.right
                 else:
                     curr.right = Node(data)
-                    inserted = True
+                    return
     
     def contains(self, target):
-        pass
+        curr = self.root
+        if curr.data == target: return True
+        while (True):
+            if curr.data == target: return True
+            if target < curr.data:
+                if curr.left: curr = curr.left
+                else: return False
+            else:
+                if curr.right: curr = curr.right
+                else: return False
+
+    # def validate(self):
+    #     validateHelp
+
+    # def validateHelper(self, curr, lessthan):
+    #     if not curr: return 0
+    #     if curr.left < curr:
+    #         return validateHelper()+validateHelper()
